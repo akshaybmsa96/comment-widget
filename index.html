@@ -1,6 +1,6 @@
 <html>
   <link rel="stylesheet" href="style.scss" />
-  <script src="index.js"></script>
+  <script defer src="./index.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       renderCommentWidget();
@@ -12,17 +12,7 @@
       <h2>Comment Box widget</h2>
 
       <div id="commentBox" class="add-commnent-wrapper"></div>
-      <div id="commentWrapper" class="comment-section-wrapper">
-        <!-- <div class="comment-container">
-          <span>Author Name</span>
-          <p>I really like this video, can you please make some more?</p>
-          <div class="comment-action-container">
-            <span>Like</span>
-            <span>Reply</span>
-            <span>Delete</span>
-          </div>
-        </div> -->
-      </div>
+      <div id="commentWrapper" class="comment-section-wrapper"></div>
     </div>
   </body>
 </html>

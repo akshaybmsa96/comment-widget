@@ -43,7 +43,7 @@ const renderComment = () => {
   const commentWrapper = document.getElementById("commentWrapper");
   const commentContainer = createElement("div", "comment-container");
 
-  const authorNameEle = createElement("span");
+  const authorNameEle = createElement("span", "", {}, "Akshay Sharma");
   const commentEle = createElement(
     "p",
     "",
