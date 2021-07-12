@@ -1,69 +1,127 @@
-const renderCommentWidget = () => {
-  console.info("starting Process!!");
-  renderCommentBox();
-  renderComment();
-};
+const comments_array = [
+  {
+    id: "1",
+    authorName: "Santosh Gupta",
+    comment: "I really like this video, can you please make some more?",
+    likes: 2,
+    replies: [
+      {
+        id: "1-1",
+        authorName: "Akshay Sharma",
+        comment: "Ya Sure! Soon",
+        likes: 1,
+        replies: [],
+      },
+    ],
+  },
+  {
+    id: "2",
+    authorName: "Naman Mathur",
+    comment: "How can i meet you? Big fan",
+    likes: 2,
+    replies: [
+      {
+        id: "2-1",
+        authorName: "Akshay Sharma",
+        comment: "Thankyou, lets meet this weekend at CP",
+        likes: 1,
+        replies: [],
+      },
+    ],
+  },
+];
 
-const createElement = (
-  type = "div",
-  classes = "",
-  attrArray = {},
-  innerHTML = ""
-) => {
-  const ele = document.createElement(type);
-  if (classes) {
-    ele.classList.add(classes);
+class CommentWidget {
+  constructor(comments) {
+    this.commentsData = comments;
   }
-  ele.innerHTML = innerHTML;
-  for (const [key, value] of Object.entries(attrArray)) {
-    ele.setAttribute(key, value);
-  }
 
-  return ele;
-};
+  initializeWidget = () => {
+    this.renderCommentWidget();
+  };
 
-const renderCommentBox = () => {
-  const commentTextBox = createElement("textarea", "", {
-    placeholder: "Write your comments ...",
-  });
-  const buttonAdd = createElement("button", "", [], "Add Comment");
-  const buttonCancel = createElement("button", "", [], "Cancel");
-  const buttonContainer = document.createElement("div");
-  buttonContainer.appendChild(buttonCancel, buttonAdd);
-  buttonContainer.appendChild(buttonAdd);
-  const commentBoxParent = document.getElementById("commentBox");
+  onLikeClick = (id) => {};
+  onDeleteClick = (id) => {};
+  onReplyClick = (id) => {};
 
-  commentBoxParent.appendChild(commentTextBox, buttonContainer);
-  commentBoxParent.appendChild(buttonContainer);
-};
+  renderCommentWidget = () => {
+    console.info("starting Process!!");
+    this.renderCommentBox();
+    this.renderComment();
+  };
 
-const renderComment = () => {
-  //rendering just static for now, will change in next commit
+  createElement = (
+    type = "div",
+    classes = "",
+    attrArray = {},
+    innerHTML = ""
+  ) => {
+    const ele = document.createElement(type);
+    if (classes) {
+      ele.classList.add(classes);
+    }
+    ele.innerHTML = innerHTML;
+    for (const [key, value] of Object.entries(attrArray)) {
+      ele.setAttribute(key, value);
+    }
 
-  const commentWrapper = document.getElementById("commentWrapper");
-  const commentContainer = createElement("div", "comment-container");
+    return ele;
+  };
 
-  const authorNameEle = createElement("span", "", {}, "Akshay Sharma");
-  const commentEle = createElement(
-    "p",
-    "",
-    "",
-    "I really like this video, can you please make some more?"
-  );
+  renderCommentBox = () => {
+    const commentTextBox = this.createElement("textarea", "", {
+      placeholder: "Write your comments ...",
+    });
+    const buttonAdd = this.createElement("button", "", [], "Add Comment");
+    const buttonCancel = this.createElement("button", "", [], "Cancel");
+    const buttonContainer = this.createElement("div");
+    buttonContainer.appendChild(buttonCancel, buttonAdd);
+    buttonContainer.appendChild(buttonAdd);
+    const commentBoxParent = document.getElementById("commentBox");
 
-  const userActionConatiner = createElement("div", "comment-action-container");
+    if (commentBoxParent) {
+      commentBoxParent.appendChild(commentTextBox, buttonContainer);
+      commentBoxParent.appendChild(buttonContainer);
+    }
+  };
 
-  const likeEle = createElement("span", "", "", "Like");
-  const replyEle = createElement("span", "", "", "Reply");
-  const deleteEle = createElement("span", "", "", "Delete");
+  renderComment = () => {
+    const commentWrapper = document.getElementById("commentWrapper");
 
-  userActionConatiner.appendChild(likeEle);
-  userActionConatiner.appendChild(replyEle);
-  userActionConatiner.appendChild(deleteEle);
+    this.commentsData.forEach((comObj, index) => {
+      const commentContainer = this.createElement("div", "comment-container");
 
-  commentContainer.appendChild(authorNameEle);
-  commentContainer.appendChild(commentEle);
-  commentContainer.appendChild(userActionConatiner);
+      const authorNameEle = this.createElement(
+        "span",
+        "",
+        {},
+        comObj.authorName
+      );
+      const commentEle = this.createElement("p", "", {}, comObj.comment);
 
-  commentWrapper.appendChild(commentContainer);
-};
+      const userActionConatiner = this.createElement(
+        "div",
+        "comment-action-container"
+      );
+
+      const likeEle = this.createElement("span", "", "", "Like");
+      const replyEle = this.createElement("span", "", "", "Reply");
+      const deleteEle = this.createElement("span", "", "", "Delete");
+
+      userActionConatiner.appendChild(likeEle);
+      userActionConatiner.appendChild(replyEle);
+      userActionConatiner.appendChild(deleteEle);
+
+      commentContainer.appendChild(authorNameEle);
+      commentContainer.appendChild(commentEle);
+      commentContainer.appendChild(userActionConatiner);
+
+      if (commentWrapper) {
+        commentWrapper.appendChild(commentContainer);
+      }
+    });
+  };
+}
+
+const commentObj = new CommentWidget(comments_array);
+commentObj.initializeWidget();
