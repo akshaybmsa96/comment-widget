@@ -40,15 +40,6 @@ div.comment-container {
   padding: 5px;
   outline: 1px solid rosybrown;
 }
-div.comment-container > p {
-  margin: 0 2px;
-  font-size: 14px;
-}
-div.comment-container > span {
-  margin: 0;
-  font-size: 12px;
-  font-weight: 600;
-}
 
 div.comment-action-container {
   display: flex;
@@ -60,4 +51,23 @@ div.comment-action-container > span {
   font-size: 10px;
   color: royalblue;
   cursor: pointer;
+}
+
+div.reply-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 5px;
+  outline: 1px solid rebeccapurple;
+  margin-left: 20px;
+}
+
+p.author-comment {
+  margin: 0 2px;
+  font-size: 14px;
+}
+span.author-name {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
 }

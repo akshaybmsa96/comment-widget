@@ -47,7 +47,7 @@ class CommentWidget {
   renderCommentWidget = () => {
     console.info("starting Process!!");
     this.renderCommentBox();
-    this.renderComment();
+    this.renderComments();
   };
 
   createElement = (
@@ -85,41 +85,70 @@ class CommentWidget {
     }
   };
 
-  renderComment = () => {
+  getUserComment = (comObj, parent) => {
+    const authorNameEle = this.createElement(
+      "span",
+      "author-name",
+      {},
+      comObj.authorName
+    );
+    const commentEle = this.createElement(
+      "p",
+      "author-comment",
+      {},
+      comObj.comment
+    );
+
+    const userActionConatiner = this.createElement(
+      "div",
+      "comment-action-container"
+    );
+
+    const likeEle = this.createElement("span", "like-button", {}, "Like");
+    const replyEle = this.createElement("span", "reply-button", {}, "Reply");
+    const deleteEle = this.createElement("span", "delete-button", {}, "Delete");
+
+    userActionConatiner.appendChild(likeEle);
+    userActionConatiner.appendChild(replyEle);
+    userActionConatiner.appendChild(deleteEle);
+
+    parent.appendChild(authorNameEle);
+    parent.appendChild(commentEle);
+    parent.appendChild(userActionConatiner);
+  };
+
+  renderComments = () => {
     const commentWrapper = document.getElementById("commentWrapper");
 
     this.commentsData.forEach((comObj, index) => {
       const commentContainer = this.createElement("div", "comment-container");
+      this.getUserComment(comObj, commentContainer);
 
-      const authorNameEle = this.createElement(
-        "span",
-        "",
-        {},
-        comObj.authorName
+      const replyContainer = this.renderReplies(
+        comObj.replies,
+        commentContainer
       );
-      const commentEle = this.createElement("p", "", {}, comObj.comment);
-
-      const userActionConatiner = this.createElement(
-        "div",
-        "comment-action-container"
-      );
-
-      const likeEle = this.createElement("span", "", "", "Like");
-      const replyEle = this.createElement("span", "", "", "Reply");
-      const deleteEle = this.createElement("span", "", "", "Delete");
-
-      userActionConatiner.appendChild(likeEle);
-      userActionConatiner.appendChild(replyEle);
-      userActionConatiner.appendChild(deleteEle);
-
-      commentContainer.appendChild(authorNameEle);
-      commentContainer.appendChild(commentEle);
-      commentContainer.appendChild(userActionConatiner);
+      if (replyContainer) {
+        commentContainer.appendChild(replyContainer);
+      }
 
       if (commentWrapper) {
         commentWrapper.appendChild(commentContainer);
       }
     });
+  };
+
+  renderReplies = (replies = [], parent) => {
+    if (!replies.length) {
+      return null;
+    } else {
+      const replyElement = this.createElement("div", "reply-container");
+      replies.forEach((reply, index) => {
+        this.getUserComment(reply, replyElement);
+      });
+
+      return replyElement;
+    }
   };
 }
 
