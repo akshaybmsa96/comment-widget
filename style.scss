@@ -5,12 +5,19 @@ body {
 div.wrapper {
   display: flex;
   border: 1px solid blue;
-  height: 100%;
   flex-direction: column;
 }
 
 div.wrapper > h2 {
   align-self: center;
+}
+
+#post {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 10px;
 }
 
 div.add-commnent-wrapper {
