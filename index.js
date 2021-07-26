@@ -12,6 +12,13 @@ const comments_array = [
         likes: 1,
         replies: [],
       },
+      {
+        id: "1-2",
+        authorName: "Santosh Gupta",
+        comment: "Awesome :)",
+        likes: 1,
+        replies: [],
+      },
     ],
   },
   {
@@ -24,6 +31,21 @@ const comments_array = [
         id: "2-1",
         authorName: "Akshay Sharma",
         comment: "Thankyou, lets meet this weekend at CP",
+        likes: 1,
+        replies: [
+          {
+            id: "2-1-1",
+            authorName: "Naman Mathur",
+            comment: "Ya! i'll be there with my friends :)",
+            likes: 1,
+            replies: [],
+          },
+        ],
+      },
+      {
+        id: "2-2",
+        authorName: "Shubham Tyagi",
+        comment: "Naman, please pick me up as well.",
         likes: 1,
         replies: [],
       },
@@ -124,13 +146,12 @@ class CommentWidget {
       const commentContainer = this.createElement("div", "comment-container");
       this.getUserComment(comObj, commentContainer);
 
-      const replyContainer = this.renderReplies(
-        comObj.replies,
-        commentContainer
-      );
-      if (replyContainer) {
-        commentContainer.appendChild(replyContainer);
-      }
+      // const replyContainer =
+
+      this.renderReplies(comObj.replies, commentContainer);
+      // if (replyContainer) {
+      //   commentContainer.appendChild(replyContainer);
+      // }
 
       if (commentWrapper) {
         commentWrapper.appendChild(commentContainer);
@@ -142,12 +163,14 @@ class CommentWidget {
     if (!replies.length) {
       return null;
     } else {
-      const replyElement = this.createElement("div", "reply-container");
       replies.forEach((reply, index) => {
+        const replyElement = this.createElement("div", "reply-container");
         this.getUserComment(reply, replyElement);
+        parent.appendChild(replyElement);
+        if (reply.replies?.length) {
+          this.renderReplies(reply.replies, replyElement);
+        }
       });
-
-      return replyElement;
     }
   };
 }
