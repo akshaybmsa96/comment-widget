@@ -90,15 +90,43 @@ class CommentWidget {
     return ele;
   };
 
+  onCommentAddHandler = (commentObj, parent) => {
+    const commentContainer = this.createElement("div", "comment-container");
+    this.getUserComment(commentObj, commentContainer);
+
+    parent.appendChild(commentContainer);
+  };
+
   renderCommentBox = () => {
     const commentTextBox = this.createElement("textarea", "", {
       placeholder: "Write your comments ...",
+      id: "comment-input",
     });
     const buttonAdd = this.createElement("button", "", [], "Add Comment");
+    buttonAdd.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const comObj = { authorName: "Anonymous" };
+      comObj.comment = commentTextBox?.value;
+
+      if (comObj.comment) {
+        commentTextBox.value = "";
+        const container = document.getElementById("commentWrapper");
+        this.onCommentAddHandler(comObj, container);
+      }
+    });
     const buttonCancel = this.createElement("button", "", [], "Cancel");
-    const buttonContainer = this.createElement("div");
+
+    buttonCancel.addEventListener("click", (e) => {
+      e.stopPropagation();
+      commentTextBox.value = "";
+    });
+    const buttonContainer = this.createElement(
+      "div",
+      "comment-button-container"
+    );
     buttonContainer.appendChild(buttonCancel, buttonAdd);
     buttonContainer.appendChild(buttonAdd);
+
     const commentBoxParent = document.getElementById("commentBox");
 
     if (commentBoxParent) {
@@ -146,12 +174,7 @@ class CommentWidget {
       const commentContainer = this.createElement("div", "comment-container");
       this.getUserComment(comObj, commentContainer);
 
-      // const replyContainer =
-
       this.renderReplies(comObj.replies, commentContainer);
-      // if (replyContainer) {
-      //   commentContainer.appendChild(replyContainer);
-      // }
 
       if (commentWrapper) {
         commentWrapper.appendChild(commentContainer);
