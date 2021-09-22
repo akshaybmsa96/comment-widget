@@ -63,8 +63,14 @@ class CommentWidget {
   };
 
   onLikeClick = (id) => {};
-  onDeleteClick = (id) => {};
-  onReplyClick = (id) => {};
+  onDeleteClick = ({ target } = { target: null }) => {
+    const eleToDelete = target?.closest(".comment-container");
+    console.log("eleToDelete", eleToDelete);
+    eleToDelete?.remove();
+  };
+  onReplyClick = (id) => {
+    console.log("id", id);
+  };
 
   renderCommentWidget = () => {
     console.info("starting Process!!");
@@ -80,7 +86,7 @@ class CommentWidget {
   ) => {
     const ele = document.createElement(type);
     if (classes) {
-      ele.classList.add(classes);
+      classes.split(" ").forEach((cls) => ele.classList.add(cls));
     }
     ele.innerHTML = innerHTML;
     for (const [key, value] of Object.entries(attrArray)) {
@@ -158,6 +164,13 @@ class CommentWidget {
     const replyEle = this.createElement("span", "reply-button", {}, "Reply");
     const deleteEle = this.createElement("span", "delete-button", {}, "Delete");
 
+    replyEle.addEventListener("click", (e) => {
+      this.onReplyClick(e);
+    });
+    deleteEle.addEventListener("click", (e) => {
+      this.onDeleteClick(e);
+    });
+
     userActionConatiner.appendChild(likeEle);
     userActionConatiner.appendChild(replyEle);
     userActionConatiner.appendChild(deleteEle);
@@ -187,7 +200,10 @@ class CommentWidget {
       return null;
     } else {
       replies.forEach((reply, index) => {
-        const replyElement = this.createElement("div", "reply-container");
+        const replyElement = this.createElement(
+          "div",
+          "comment-container reply-container"
+        );
         this.getUserComment(reply, replyElement);
         parent.appendChild(replyElement);
         if (reply.replies?.length) {
