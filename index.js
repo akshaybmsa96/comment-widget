@@ -68,8 +68,15 @@ class CommentWidget {
     console.log("eleToDelete", eleToDelete);
     eleToDelete?.remove();
   };
-  onReplyClick = (id) => {
-    console.log("id", id);
+  onReplyClick = ({ target }) => {
+    document.getElementById("reply-editor")?.remove();
+    const parentContainer = target?.closest(".comment-container");
+    const replyContainer = target?.closest(".action-wrapper-container");
+    const replyEditor = this.getReplyCommentEditor(parentContainer);
+
+    if (replyEditor && parentContainer) {
+      replyContainer.appendChild(replyEditor);
+    }
   };
 
   renderCommentWidget = () => {
@@ -86,7 +93,7 @@ class CommentWidget {
   ) => {
     const ele = document.createElement(type);
     if (classes) {
-      classes.split(" ").forEach((cls) => ele.classList.add(cls));
+      classes.split(" ").forEach((cls) => cls && ele.classList.add(cls));
     }
     ele.innerHTML = innerHTML;
     for (const [key, value] of Object.entries(attrArray)) {
@@ -96,8 +103,11 @@ class CommentWidget {
     return ele;
   };
 
-  onCommentAddHandler = (commentObj, parent) => {
-    const commentContainer = this.createElement("div", "comment-container");
+  onCommentAddHandler = (commentObj, parent, cls = "") => {
+    const commentContainer = this.createElement(
+      "div",
+      "comment-container" + " " + cls
+    );
     this.getUserComment(commentObj, commentContainer);
 
     parent.appendChild(commentContainer);
@@ -130,15 +140,53 @@ class CommentWidget {
       "div",
       "comment-button-container"
     );
-    buttonContainer.appendChild(buttonCancel, buttonAdd);
+    buttonContainer.appendChild(buttonCancel);
     buttonContainer.appendChild(buttonAdd);
 
     const commentBoxParent = document.getElementById("commentBox");
 
     if (commentBoxParent) {
-      commentBoxParent.appendChild(commentTextBox, buttonContainer);
+      commentBoxParent.appendChild(commentTextBox);
       commentBoxParent.appendChild(buttonContainer);
     }
+  };
+
+  getReplyCommentEditor = (parent) => {
+    const commentTextBox = this.createElement("textarea", "replyEditor", {
+      placeholder: "Write your comments ...",
+      id: "comment-input-reply",
+    });
+    const replyEditor = this.createElement("div", "", { id: "reply-editor" });
+    const buttonAdd = this.createElement("button", "", [], "Add Comment");
+    buttonAdd.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const comObj = { authorName: "Anonymous" };
+      comObj.comment = commentTextBox?.value;
+
+      if (comObj.comment && parent) {
+        commentTextBox.value = "";
+        this.onCommentAddHandler(comObj, parent, "reply-container");
+        replyEditor.remove();
+      }
+    });
+    const buttonCancel = this.createElement("button", "", [], "Cancel");
+
+    buttonCancel.addEventListener("click", (e) => {
+      e.stopPropagation();
+      replyEditor.remove();
+    });
+    const buttonContainer = this.createElement(
+      "div",
+      "comment-button-container"
+    );
+
+    buttonContainer.appendChild(buttonCancel);
+    buttonContainer.appendChild(buttonAdd);
+
+    replyEditor.appendChild(commentTextBox);
+    replyEditor.appendChild(buttonContainer);
+
+    return replyEditor;
   };
 
   getUserComment = (comObj, parent) => {
@@ -175,9 +223,16 @@ class CommentWidget {
     userActionConatiner.appendChild(replyEle);
     userActionConatiner.appendChild(deleteEle);
 
+    const actionWrapperContainer = this.createElement(
+      "div",
+      "action-wrapper-container"
+    );
+
+    actionWrapperContainer.appendChild(userActionConatiner);
+
     parent.appendChild(authorNameEle);
     parent.appendChild(commentEle);
-    parent.appendChild(userActionConatiner);
+    parent.appendChild(actionWrapperContainer);
   };
 
   renderComments = () => {
@@ -199,7 +254,7 @@ class CommentWidget {
     if (!replies.length) {
       return null;
     } else {
-      replies.forEach((reply, index) => {
+      replies.forEach((reply) => {
         const replyElement = this.createElement(
           "div",
           "comment-container reply-container"

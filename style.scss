@@ -33,6 +33,16 @@ div.add-commnent-wrapper > textarea {
   overflow: scroll;
 }
 
+.replyEditor {
+  resize: none;
+  overflow: scroll;
+  width: 50%;
+}
+
+#reply-editor {
+  margin: 10px;
+}
+
 div.comment-section-wrapper {
   margin: 40px 10px;
   display: flex;
